@@ -58,6 +58,51 @@ class BinanceApi:
             'interval': interval,
             'limit': limit
         }
+        
+    def post_limit_order(self, symbol: str, side, qnt, price, reduce_only=False):
+        if self.futures:
+            endpoint = "/fapi/v1/order"
+        else:
+            endpoint = "/api/v3/order"
+        method = 'POST'
+        params = {
+            'symbol': symbol,
+            'side': side,
+            'quantity': qnt,
+            'type': 'LIMIT',
+            'price': price,
+            'timeInForce': 'GTC'
+        }
+        if reduce_only:
+            params['reduceOnly'] = True
+
+        return self.http_request(endpoint=endpoint, method=method, params=params, sign_need=True)
+
+    def post_market_order(self, symbol: str, side, qnt: float = None, quoteOrderQty: float = None):
+        if self.futures:
+            endpoint = "/fapi/v1/order"
+            if not qnt:
+                print("Mandatory parameter for futures - quantity is missing!")
+                return
+        else:
+            endpoint = "/api/v3/order"
+        method = 'POST'
+        params = {
+            'symbol': symbol,
+            'side': side,
+            'type': 'MARKET',
+        }
+        if qnt or quoteOrderQty:
+            if qnt:
+                params['quantity'] = qnt
+            if quoteOrderQty:
+                params['quoteOrderQty'] = quoteOrderQty
+
+        else:
+            print("One of the mandatory parameters quantity or quoteOrderQty is not specified")
+            return
+
+        return self.http_request(endpoint=endpoint, method=method, params=params, sign_need=True)
         if startTime:
             params['startTime'] = startTime
         if endTime:
