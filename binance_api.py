@@ -58,6 +58,20 @@ class BinanceApi:
             'interval': interval,
             'limit': limit
         }
+
+    def get_order_book(self, symbol: str, limit=100):
+        if self.futures:
+            endpoint = "/fapi/v1/depth"
+        else:
+            endpoint = "/api/v3/depth"
+        method = "GET"
+        params = {
+            'symbol': symbol,
+            'limit': limit
+        }
+
+        return self.http_request(method=method, endpoint=endpoint, params=params)
+
         
     def post_limit_order(self, symbol: str, side, qnt, price, reduce_only=False):
         if self.futures:
