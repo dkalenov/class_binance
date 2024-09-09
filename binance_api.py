@@ -46,6 +46,18 @@ class BinanceApi:
         else:
             print(response.text)
         return response
+        
+    def get_recent_trades(self, symbol: str, limit: int = 500):
+        if self.futures:
+            endpoint = '/fapi/v1/trades'
+        else:
+            endpoint = '/api/v3/trades'
+        method = 'GET'
+        params = {
+            'symbol': symbol,
+            'limit': limit
+        }
+        return self.http_request(endpoint=endpoint, method=method, params=params)
 
     def get_klines(self, symbol: str, interval: str, startTime: int = None, endTime: int = None, limit=500):
         if self.futures:
