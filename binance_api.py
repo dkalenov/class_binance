@@ -83,7 +83,16 @@ class BinanceApi:
         }
 
         return self.http_request(method=method, endpoint=endpoint, params=params)
+        
+    def get_server_time(self):
+        if self.futures:
+            endpoint = '/fapi/v1/time'
+        else:
+            endpoint = '/api/v3/time'
 
+        method = "GET"
+
+        return self.http_request(endpoint=endpoint, method=method)
         
     def post_limit_order(self, symbol: str, side, qnt, price, reduce_only=False):
         if self.futures:
