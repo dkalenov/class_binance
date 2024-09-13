@@ -143,3 +143,21 @@ class BinanceApi:
         if endTime:
             params['endTime'] = endTime
         return self.http_request(method=method, endpoint=endpoint, params=params)
+
+
+    def get_exchange_info(self, symbol: str = None, symbols=None):
+        if self.futures:
+            endpoint = '/fapi/v1/exchangeInfo'
+        else:
+            endpoint = '/api/v3/exchangeInfo'
+        method = "GET"
+        params = {}
+        if symbol and not symbols:
+            params['symbol'] = symbol
+            return self.http_request(endpoint=endpoint, method=method, params=params)
+
+        if symbols and not symbol:
+            params['symbols'] = symbols
+            return self.http_request(endpoint=endpoint, method=method, params=params)
+
+        return self.http_request(endpoint=endpoint, method=method, params=params)
